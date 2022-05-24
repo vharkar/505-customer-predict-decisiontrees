@@ -1,0 +1,13 @@
+feature,coefficient
+female,1.99
+Mrs.,1.07
+Cherbourg,0.35
+Miss,0.32
+VIP,0.16
+Queenstown,-0.11
+Siblings and Spouses,-0.26
+"Age (20, 28]",-0.41
+"Age (28, 38]",-0.43
+"Age (38, 80]",-0.97
+Cabin Class 2,-0.99
+Cabin Class 3,-2.09

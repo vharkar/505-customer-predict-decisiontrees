@@ -82,7 +82,6 @@ def radio_results(value):
 
               ])
 def update_user_table(edu, age, income, spendingWine, spendingFruit, spendingMeat, spendingFish, spendingSweet, spendingGold, numDeals, numWeb, numCatalog, numStore, recency, visits, customerSince, mstatus, children, priorCmpgnA, priorCmpgnB, priorCmpgnC, ):
-    #if edu == Graduate', 'PostGraduate', 'UnderGraduate'
     return html.Div([
         html.Div(f'Education: {edu}'),
         html.Div(f'Age: {age}'),

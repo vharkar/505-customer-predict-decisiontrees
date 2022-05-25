@@ -141,7 +141,7 @@ def display_eval_metrics(value):
 def display_eval_params(value):
     # Maximum Tree Depth
     if value == choices3[0]:
-        return 'resources/max_depth.png'
+        return './resources/max_depth.png'
 
     # Maximum Sample Leafs
     elif value == choices3[1]:

@@ -56,7 +56,7 @@ def radio_results(value):
 @app.callback(Output('page-3-graphic', 'figure'),
               [Input('page-3-radios', 'value')])
 def radio_results(value):
-    return display_eval_metrics(value)
+    return display_eval_params(value)
 
 # Tab 4 Callback # 1
 @app.callback(Output('user-inputs-box', 'children'),

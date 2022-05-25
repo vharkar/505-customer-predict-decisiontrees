@@ -17,7 +17,7 @@ tab_3_layout = html.Div([
             dcc.RadioItems(
                 id='page-3-radios',
                 options=[{'label': i, 'value': i} for i in choices],
-                value='Optimal Parameters'
+                value='Maximum Tree Depth'
             ),
         ],className='two columns'),
         html.Div([

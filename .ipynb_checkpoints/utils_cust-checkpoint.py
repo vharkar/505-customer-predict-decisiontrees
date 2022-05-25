@@ -97,149 +97,61 @@ def display_feature_importance(filename_fi):
         fig
         
 def display_classification_report(filename):
-    cr=pd.read_csv(filename_confusion)
-        report_data = []
-    lines = report.split('\n')
-    for line in lines[2:-3]:
-        row = {}
-        row_data = line.split('      ')
-        row['class'] = row_data[0]
-        row['precision'] = float(row_data[1])
-        row['recall'] = float(row_data[2])
-        row['f1_score'] = float(row_data[3])
-        row['support'] = float(row_data[4])
-        report_data.append(row)
-    dataframe = pd.DataFrame.from_dict(report_data)
-    dataframe.to_csv('classification_report.csv', index = False)
+    cr=pd.read_csv(filename)
+    trace = go.Table(
+           header=dict(values=cr.columns,
+                line = dict(color='#7D7F80'),
+                fill = dict(color=Viridis[55]),
+                align = ['left'] * 5),
+           cells=dict(values=['', cr['precision'], cr['recall'], cr['f1-score'], cr['support']],
+                line = dict(color='#7D7F80'),
+                fill = dict(color='white'),
+                align = ['left'] * 5))
 
-report = classification_report(y_true, y_pred)
-classification_report_csv(report)
+    layout = go.Layout(
+        title = f'Classification Report',
+    )  
+    
+    fig = dict(data=[trace], layout=layout)
+    return fig
+    
     
 def display_eval_metrics(value):
 
-    ### Comparison of Possible Models
+    ### Classification Report
     if value==choices[0]:
-        compare_models=pd.read_csv('resources/compare_models_cust.csv', index_col=0)
-        mydata1 = go.Bar(
-            x=compare_models.loc['F1 score'].index,
-            y=compare_models.loc['F1 score'],
-            name=compare_models.index[0],
-            marker=dict(color=Viridis[50])
-        )
-        mydata2 = go.Bar(
-            x=compare_models.loc['Accuracy'].index,
-            y=compare_models.loc['Accuracy'],
-            name=compare_models.index[1],
-            marker=dict(color=Viridis[30])
-        )
-        mydata3 = go.Bar(
-            x=compare_models.loc['AUC score'].index,
-            y=compare_models.loc['AUC score'],
-            name=compare_models.index[2],
-            marker=dict(color=Viridis[10])
-        )
-        mylayout = go.Layout(
-            title='Logistic Regression has the highest accuracy and ROC-AUC score',
-            xaxis = dict(title = 'Predictive models'), # x-axis label
-            yaxis = dict(title = 'Score'), # y-axis label
+        display_classification_report('resources/class_report_A.csv')
 
-        )
-        fig = go.Figure(data=[mydata1, mydata2, mydata3], layout=mylayout)
-        return fig
-
-    ### Final Model Metrics
+    ### Receiver Operating Characteristic (ROC): Area Under Curve
     elif value==choices[1]:
-        file = open('resources/eval_scores_cust.pkl', 'rb')
-        evals=pickle.load(file)
-        file.close()
-        mydata = [go.Bar(
-            x=list(evals.keys()),
-            y=list(evals.values()),
-            marker=dict(color=Viridis[::12])
-        )]
-
-        mylayout = go.Layout(
-            title='Evaluation Metrics for Logistic Regression Model (Testing Dataset = 443 rows)',
-            xaxis = {'title': 'Metrics'},
-            yaxis = {'title': 'Percent'},
-
-        )
-        fig = go.Figure(data=mydata, layout=mylayout)
-        return fig
-
-    # Receiver Operating Characteristic (ROC): Area Under Curve
-    elif value==choices[2]:
-
-        with open('resources/roc_dict_cust.json') as json_file:
-            roc_dict = json.load(json_file)
-        FPR=roc_dict['FPR']
-        TPR=roc_dict['TPR']
-        y_test=pd.Series(roc_dict['y_test'])
-        predictions=roc_dict['predictions']
-
-        roc_score=round(100*roc_auc_score(y_test, predictions),1)
-        trace0=go.Scatter(
-                x=FPR,
-                y=TPR,
-                mode='lines',
-                name=f'AUC: {roc_score}',
-                marker=dict(color=Viridis[10])
-                )
-        trace1=go.Scatter(
-                x=[0,1],
-                y=[0,1],
-                mode='lines',
-                name='Baseline Area: 50.0',
-            marker=dict(color=Viridis[50])
-                )
-        layout=go.Layout(
-            title='Receiver Operating Characteristic (ROC): Area Under Curve',
-            xaxis={'title': 'False Positive Rate (100-Specificity)','scaleratio': 1,'scaleanchor': 'y'},
-            yaxis={'title': 'True Positive Rate (Sensitivity)'}
-            )
-        data=[trace0, trace1]
-        fig = dict(data=data, layout=layout)
-        return fig
-
-    # Confusion Matrix
-    elif value==choices[3]:
-        with open('resources/roc_dict_cust.json') as json_file:
-            roc_dict = json.load(json_file)
-        FPR=roc_dict['FPR']
-        TPR=roc_dict['TPR']
-        y_test=pd.Series(roc_dict['y_test'])
+        display_roc('resources/roc_dict_A.csv')
         
-        cm=pd.read_csv('resources/confusion_matrix_cust.csv')
-        trace = go.Table(
-            header=dict(values=cm.columns,
-                        line = dict(color='#7D7F80'),
-                        fill = dict(color=Viridis[55]),
-                        align = ['left'] * 5),
-            cells=dict(values=[cm[f'n={len(y_test)}'], cm['pred: ignored'], cm['pred: responded']],
-                       line = dict(color='#7D7F80'),
-                       fill = dict(color='white'),
-                       align = ['left'] * 5))
+    # Confusion Matrix
+    elif value==choices[2]:
+        display_confusion_matrix('resources/roc_dict_A.csv', 'resources/confusion_matrix_A.csv')
 
-        layout = go.Layout(
-            title = f'Logistic Regression Model (Testing Dataset)',
-        )
+    # Feature Importance
+    elif value==choices[3]:
+        display_feature_importance('resources/feature_importance.csv')
 
-        fig = dict(data=[trace], layout=layout)
-        return fig
+def display_eval_params(value):
 
-    # Odds of Survival (Coefficients)
-    elif value==choices[4]:
-        coeffs=pd.read_csv('resources/coefficients_cust.csv')
-        mydata = [go.Bar(
-            x=coeffs['feature'],
-            y=coeffs['coefficient'],
-            marker=dict(color=Viridis[::-6])
-        )]
-        mylayout = go.Layout(
-            title='Customer Behavior prediction',
-            xaxis = {'title': 'Customer Features'},
-            yaxis = {'title': 'Odds of Response'},
+    ### Maximum Tree Depth
+    if value==choices[0]:
+        display_classification_report('resources/class_report_A.csv')
 
-        )
-        fig = go.Figure(data=mydata, layout=mylayout)
-        return fig
+    ### Maximum Sample Leafs
+    elif value==choices[1]:
+        display_roc('resources/roc_dict_A.csv')
+        
+    # Confusion Matrix
+    elif value==choices[2]:
+        display_confusion_matrix('resources/roc_dict_A.csv', 'resources/confusion_matrix_A.csv')
+
+    # Feature Importance
+    elif value==choices[3]:
+        display_feature_importance('resources/feature_importance.csv')
+        
+            ### Receiver Operating Characteristic (ROC): Area Under Curve
+    elif value==choices[1]:
+        display_roc('resources/roc_dict_A.csv')

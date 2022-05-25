@@ -81,6 +81,14 @@ tab_4_layout = html.Div([
                 value='5',
             ),
         ], className='four columns'),
+        html.Div([
+            html.Div('Years as a customer'),
+            dcc.Dropdown(
+                id='customerSince_dropdown',
+                options=[{'label': i, 'value': i} for i in range(0, 10)],
+                value='None',
+            ),
+        ], className='five columns'),
         html.Div('     ', className='one column')
     ],className='twelve columns'),
 
@@ -108,21 +116,29 @@ tab_4_layout = html.Div([
                 ),
         ],className='three columns'),
         html.Div([
-            html.Div('Responded to Prior Campaign'),
+            html.Div('Responded to Campaign A'),
             dcc.RadioItems(
-                id='priorCmpgn_radio',
+                id='priorCmpgnA_radio',
                 options=[{'label': i, 'value': i} for i in ['Yes', 'No']],
                 value='None',
                 ),
         ],className='five columns'),
         html.Div([
-            html.Div('Customer for more than 7 years'),
+            html.Div('Responded to Campaign B'),
             dcc.RadioItems(
-                id='customerSince_radio',
+                id='priorCmpgnB_radio',
                 options=[{'label': i, 'value': i} for i in ['Yes', 'No']],
                 value='None',
-            ),
-        ], className='five columns'),
+                ),
+        ],className='five columns'),
+        html.Div([
+            html.Div('Responded to CampaignC'),
+            dcc.RadioItems(
+                id='priorCmpgnC_radio',
+                options=[{'label': i, 'value': i} for i in ['Yes', 'No']],
+                value='None',
+                ),
+        ],className='five columns'),
     ],className='twelve columns'),
     html.Br(),
     html.Br(),

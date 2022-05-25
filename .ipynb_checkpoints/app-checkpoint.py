@@ -66,13 +66,18 @@ def radio_results(value):
               Input('Age_dropdown', 'value'),
               Input('Income_dropdown', 'value'),
               Input('MaritalStatus_dropdown', 'value'),
+              Input('customerSince_radio', 'value')
+              Input('children_radio', 'value'),
+                
               Input('Spending_dropdown', 'value'),
               Input('NumPurchases_dropdown', 'value'),
-              Input('Recency_dropdown', 'value'),
+
               Input('Webvisits_dropdown', 'value'),
-              Input('children_radio', 'value'),
-              Input('priorCmpgn_radio', 'value'),
-              Input('customerSince_radio', 'value')
+              Input('Recency_dropdown', 'value'),
+              Input('priorCmpgnA_radio', 'value'),
+              Input('priorCmpgnB_radio', 'value'),
+              Input('priorCmpgnC_radio', 'value'),
+
               ])
 def update_user_table(edu, age, income, mstatus, spending, nump, recency, visits, children, priorCmpgn, customerSince):
     return html.Div([
@@ -84,9 +89,12 @@ def update_user_table(edu, age, income, mstatus, spending, nump, recency, visits
         html.Div(f'Customer since (in years): {customerSince}'),
         html.Div(f'Amount Spent: {spending}'),
         html.Div(f'Number of Purchases: {nump}'),
-        html.Div(f'Last Purchased (days ago): {recency} '),
+
         html.Div(f'Number of web visits: {visits}'),
-        html.Div(f'Responded to prior campaigns: {priorCmpgn}'),
+        html.Div(f'Last Purchased (days ago): {recency} '),
+        html.Div(f'Responded to Campaign A: {priorCmpgnA}'),
+        html.Div(f'Responded to Campaign B: {priorCmpgnB}'),
+        html.Div(f'Responded to Campaign C: {priorCmpgnB}'),
     ])
 
 # Tab 4 Callback # 2
@@ -96,84 +104,83 @@ def update_user_table(edu, age, income, mstatus, spending, nump, recency, visits
               Input('Age_dropdown', 'value'),
               Input('Income_dropdown', 'value'),
               Input('MaritalStatus_dropdown', 'value'),
-              Input('Spending_dropdown', 'value'),
-              Input('NumPurchases_dropdown', 'value'),
               Input('Recency_dropdown', 'value'),
               Input('Webvisits_dropdown', 'value'),
               Input('children_radio', 'value'),
-              Input('priorCmpgn_radio', 'value'),
-              Input('customerSince_radio', 'value')
+              Input('customerSince_radio', 'value'),
+              Input('priorCmpgnA_radio', 'value'),
+              Input('priorCmpgnB_radio', 'value'),
+              Input('priorCmpgnC_radio', 'value'),
+              Input('MntWines_dropdown', 'value'),
+              Input('MntFruits_dropdown', 'value'),
+              Input('MntMeatProducts_dropdown', 'value'),
+              Input('MntFishProducts_dropdown', 'value'),
+              Input('MntSweetProducts_dropdown', 'value'),
+              Input('MntGoldProds_dropdown', 'value'),
+              Input('NumDealsPurchases_dropdown', 'value'),        
+              Input('NumWebPurchases_dropdown', 'value'),   
+              Input('NumCatalogPurchases_dropdown', 'value'),   
+              Input('NumStorePurchases_dropdown', 'value')
               ])
-def final_prediction(edu, age, income, mstatus, spending, nump, recency, visits, children, priorCmpgn, customerSince):
-    inputs=[mstatus, priorCmpgn, children, age, edu, income, recency, spending, visits, customerSince, nump]
-    keys=['Marital_Status', 'PriorCampaign', 'Children', 'age', 'Education', 'Income', 'Recency', 'MntSpent', 'NumWebVisitsMonth', 'CustYrsMoreThan7', 'NumPurchases']
-    dict11=dict(zip(keys, inputs))
-    df=pd.DataFrame([dict11])
+def final_prediction(edu, age, income, mstatus, recency, visits, children, customerSince, priorCmpgnA, priorCmpgnB, priorCmpgnC, spendingWine, spendingFruit, spendingMeat, spendingFish, spendingSweet, spendingGold, numStore, numDeals, numWeb, numCatalog):
+    
+    inputs=[income, children, recency, spendingWine, spendingFruit, spendingMeat, spendingFish, spendingSweet, spendingGoldmstatus, numDeals, numWeb, numCatalog, numSore, visits, priorCmpgnB, priorCmpgnA, priorCmpgnC, customerSince, age, edu, mstatus]
+    
+    keys=['Income', 'Teenhome', 'Recency', 'MntWines', 'MntFruits', 'MntMeatProducts', 'MntFishProducts', 'MntSweetProducts', 'MntGoldProds', 'NumDealsPurchases', 'NumWebPurchases', 'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth', 'AcceptedCmp3', 'AcceptedCmp5', 'AcceptedCmp2', 'Yrs_Customer', 'age', 'Education_', 'Marital_Status_']
+    
+    dictCust=dict(zip(keys, inputs))
+    df=pd.DataFrame([dictCust])
+    
     # create the features we'll need to run our logreg model.
     df['age']=pd.to_numeric(df.age, errors='coerce')
-    df['Single']=np.where((df.Marital_Status=='Single'),1,0)
+    
+    df['Marital_Status_']=pd.to_numeric(df.Marital_Status, errors='coerce')
     df['Relationship']=np.where((df.Marital_Status=='Relationship'),1,0)
     df['NewlySingle']=np.where((df.Marital_Status=='NewlySingle'),1,0)
 
-    df['Children']=np.where((df.Children=='Yes'),1,0)
-    df['PriorCampaign']=np.where((df.PriorCampaign=='Yes'),1,0)
+    df['Teenhome']=np.where((df.Children=='Yes'),1,0)
+    
+    df['AcceptedCmp2']=np.where((df.PriorCampaignC=='Yes'),1,0)
+    df['AcceptedCmp3']=np.where((df.PriorCampaignB=='Yes'),1,0)
+    df['AcceptedCmp5']=np.where((df.PriorCampaignA=='Yes'),1,0)
+    
     df['Income']=pd.to_numeric(df.Income, errors='coerce')
     df['Recency']=pd.to_numeric(df.Recency, errors='coerce')
-    df['MntSpent']=pd.to_numeric(df.MntSpent, errors='coerce')
+    df['Yrs_Customer']=pd.to_numeric(df.Yrs_Customer, errors='coerce')
     df['NumWebVisitsMonth']=pd.to_numeric(df.NumWebVisitsMonth, errors='coerce')
-    df['CustYrsMoreThan7']=np.where((df.CustYrsMoreThan7=='Yes'),1,0)
-    df['NumPurchases']=pd.to_numeric(df.NumPurchases, errors='coerce')
+    
+    df['MntWines']=pd.to_numeric(df.MntWines, errors='coerce')
+    df['MntFruits']=pd.to_numeric(df.MntFruits, errors='coerce')
+    df['MntMeatProducts']=pd.to_numeric(df.MntMeatProducts, errors='coerce')
+    df['MntFishProducts']=pd.to_numeric(df.MntFishProducts, errors='coerce')
+    df['MntSweetProducts']=pd.to_numeric(df.MntSweetProducts, errors='coerce')
+    df['MntGoldProds']=pd.to_numeric(df.MntGoldProds, errors='coerce')
+        
+    df['NumStorePurchases']=pd.to_numeric(df.NumStorePurchases, errors='coerce')
+    df['NumDealsPurchases']=pd.to_numeric(df.NumDealsPurchases, errors='coerce')
+    df['NumWebPurchases']=pd.to_numeric(df.NumWebPurchases, errors='coerce')
+    df['NumCatalogPurchases']=pd.to_numeric(df.NumCatalogPurchases, errors='coerce')
 
+    df['Education_']=pd.to_numeric(df.Education_, errors='coerce')
     df['Graduate']=np.where(df.Education=='Graduate',1,0)
     df['PostGraduate']=np.where(df.Education=='PostGraduate',1,0)
     df['UnderGraduate']=np.where(df.Education=='UnderGraduate',1,0)
 
-    df['Age']=np.where((df.age>50),1,0)
-
-    df['Income125000']=np.where((df.Income>=1)&(df.Income<25000),1,0)
-    df['Income2500050000']=np.where((df.Income>=25000)&(df.Income<50000),1,0)
-    df['Income5000075000']=np.where((df.Income>=50000)&(df.Income<75000),1,0)
-    df['Income75000100000']=np.where((df.Income>=75000)&(df.Income<100000),1,0)
-    df['Income100000670000']=np.where((df.Income>=100000)&(df.Income<670000),1,0)
-
-    df['Recency025']=np.where((df.Recency>=0)&(df.Recency<25),1,0)
-    df['Recency2550']=np.where((df.Recency>=25)&(df.Recency<50),1,0)
-    df['Recency5075']=np.where((df.Recency>=50)&(df.Recency<75),1,0)
-    df['Recency75100']=np.where((df.Recency>=75)&(df.Recency<100),1,0)
-
-    df['MntSpent0600']=np.where((df.MntSpent>=0)&(df.MntSpent<600),1,0)
-    df['MntSpent6001200']=np.where((df.MntSpent>=600)&(df.MntSpent<1200),1,0)
-    df['MntSpent12001800']=np.where((df.MntSpent>=1200)&(df.MntSpent<1800),1,0)
-    df['MntSpent18002400']=np.where((df.MntSpent>=1800)&(df.MntSpent<2400),1,0)
-    df['MntSpent24003000']=np.where((df.MntSpent>=2400)&(df.MntSpent<3000),1,0)
-
-    df['WebVisitsMoreThan10']=np.where((df.NumWebVisitsMonth>10),1,0)
-
-    df['NumPurchasesMoreThan25']=np.where((df.NumPurchases>25),1,0)
-
-    # drop unnecessary columns, and reorder columns to match the logreg model.
-    df=df.drop(['age', 'Marital_Status', 'Income', 'Education', 'Recency', 'MntSpent', 'NumWebVisitsMonth', 'NumPurchases'], axis=1)
-    df=df[['PriorCampaign', 'Children', 'Age',
-           'Single', 'NewlySingle', 'Relationship',
-           'UnderGraduate', 'Graduate', 'PostGraduate',
-           'Income125000', 'Income2500050000','Income5000075000', 'Income75000100000', 'Income100000670000',
-           'Recency025', 'Recency2550', 'Recency5075', 'Recency75100',
-           'MntSpent0600', 'MntSpent6001200', 'MntSpent12001800', 'MntSpent18002400','MntSpent24003000',
-           'WebVisitsMoreThan10', 'CustYrsMoreThan7', 'NumPurchasesMoreThan25']]
+    # drop unnecessary columns, and reorder columns to match the model.
+    
+    df=df[['Income', 'Teenhome', 'Recency', 
+           'MntWines', 'MntFruits', 'MntMeatProducts', 'MntFishProducts', 'MntSweetProducts', 'MntGoldProds', 
+           'NumDealsPurchases', 'NumWebPurchases', 'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth', 
+           'AcceptedCmp3', 'AcceptedCmp5', 'AcceptedCmp2', 'Yrs_Customer', 'age', 'Education_', 'Marital_Status_']]
 
     # unpickle the final model
-    file = open('resources/final_logreg_model_cust.pkl', 'rb')
-    logreg=pickle.load(file)
+    file = open('resources/final_model.pkl', 'rb')
+    model=pickle.load(file)
     file.close()
+    
     # predict on the user-input values (need to create an array for this)
-    firstrow=df.loc[0]
-    print('firstrow', firstrow)
-    myarray=firstrow.values
-    print('myarray', myarray)
-    thisarray=myarray.reshape((1, myarray.shape[0]))
-    print('thisarray', thisarray)
 
-    prob=logreg.predict_proba(thisarray)
+    prob=model.predict(df)
     final_prob=round(float(prob[0][1])*100,1)
     return(f'Probability of Responding: {final_prob}%')
 

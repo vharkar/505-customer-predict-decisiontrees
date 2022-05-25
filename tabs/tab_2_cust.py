@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html
 import pandas as pd
 
-choices=['Classification Report',
+choices2=['Classification Report',
 'ROC-AUC',
 'Confusion Matrix',
 'Feature Importance']
@@ -15,8 +15,8 @@ tab_2_layout = html.Div([
             html.Br(),
             dcc.RadioItems(
                 id='page-2-radios',
-                options=[{'label': i, 'value': i} for i in choices],
-                value='Classification Report'
+                options=[{'label': i, 'value': i} for i in choices2],
+                value='ROC-AUC'
             ),
         ],className='two columns'),
         html.Div([

@@ -1,6 +1,6 @@
 # Titanic Survival Classifier
 
-## View deployed app on Heroku: https://titanic-survival-classifier.herokuapp.com/
+## View deployed app on Heroku: https://vibha-customer-decisiontree-classifcation.herokuapp.com/
 
 This repo is a template for capstone presentations of machine learning. Though simple, it has several important features that should be imitated in any capstone:
 
@@ -11,4 +11,4 @@ This repo is a template for capstone presentations of machine learning. Though s
 * A feature whereby the model receives new user inputs and makes predictions based on the new data.
 * An interactive user-interface deployed on a cloud platform and accessible to potential reviewers.
 
-Source: https://www.kaggle.com/c/titanic
+Source: https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis

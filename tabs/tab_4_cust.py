@@ -17,8 +17,8 @@ tab_4_layout = html.Div([
             html.Div('Education'),
             dcc.Dropdown(
                 id='Education_dropdown',
-                options=[{'label': i, 'value': i} for i in ['UnderGraduate', 'Graduate', 'PostGraduate']],
-                value='UnderGraduate',
+                options=[{'label': j, 'value': i} for i,j in zip([2,1,0],['UnderGraduate', 'Graduate', 'PostGraduate'])],
+                value='2',
                 ),
         ],className='three columns'),
         html.Div([

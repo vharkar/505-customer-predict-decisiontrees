@@ -124,11 +124,11 @@ def display_eval_metrics(value):
 
     ### Receiver Operating Characteristic (ROC): Area Under Curve
     elif value==choices[1]:
-        display_roc('resources/roc_dict_A.csv')
+        display_roc('resources/roc_dict_A.json')
         
     # Confusion Matrix
     elif value==choices[2]:
-        display_confusion_matrix('resources/roc_dict_A.csv', 'resources/confusion_matrix_A.csv')
+        display_confusion_matrix('resources/roc_dict_A.json', 'resources/confusion_matrix_A.csv')
 
     # Feature Importance
     elif value==choices[3]:
@@ -138,20 +138,21 @@ def display_eval_params(value):
 
     ### Maximum Tree Depth
     if value==choices[0]:
-        display_classification_report('resources/class_report_A.csv')
+        return 'resources/max_depth.png'
 
     ### Maximum Sample Leafs
     elif value==choices[1]:
-        display_roc('resources/roc_dict_A.csv')
+        return 'resources/min_samples.png'
         
-    # Confusion Matrix
+    # Maximum Sample Splits
     elif value==choices[2]:
-        display_confusion_matrix('resources/roc_dict_A.csv', 'resources/confusion_matrix_A.csv')
+        return 'resources/min_splits.png'
 
-    # Feature Importance
+    # Maximum Features
     elif value==choices[3]:
-        display_feature_importance('resources/feature_importance.csv')
+        return 'resources/max_features.png'
         
-            ### Receiver Operating Characteristic (ROC): Area Under Curve
-    elif value==choices[1]:
-        display_roc('resources/roc_dict_A.csv')
+    ### Confusion Matrix
+    elif value==choices[4]:
+        return 'resources/max_depth.png'
+

@@ -53,10 +53,11 @@ def render_content(tab):
 def radio_results(value):
     return display_eval_metrics(value)
 
-@app.callback(Output('page-3-graphic', 'figure'),
+@app.callback(Output('page-3-graphic', 'src'),
+              Output('confusionM', 'figure'),
               [Input('page-3-radios', 'value')])
 def radio_results(value):
-    return display_eval_params(value)
+    return display_eval_params(value), display_confusion_matrix('resources/roc_dict_B.json', 'resources/confusion_matrix_B.csv')
 
 # Tab 4 Callback # 1
 @app.callback(Output('user-inputs-box', 'children'),

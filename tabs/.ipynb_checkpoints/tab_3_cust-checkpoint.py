@@ -21,7 +21,10 @@ tab_3_layout = html.Div([
             ),
         ],className='two columns'),
         html.Div([
-            dcc.Graph(id='page-3-graphic')
+            html.Img(id='page-3-graphic', style={'height':'50%', 'width':'50%'})
+        ],className='ten columns'),
+        html.Div([
+            dcc.Graph(id='confusionM')
         ],className='ten columns'),
     ], className='twelve columns')
 

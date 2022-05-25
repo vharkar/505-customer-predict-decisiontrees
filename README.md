@@ -1,6 +1,6 @@
 # Titanic Survival Classifier
 
-## View deployed app on Heroku: https://vibha-customer-decisiontree-classifcation.herokuapp.com/
+## View deployed app on Heroku: https://vibha-customer-dtree-classfcn.herokuapp.com/
 
 This repo is a template for capstone presentations of machine learning. Though simple, it has several important features that should be imitated in any capstone:
 

@@ -59,8 +59,6 @@ def display_roc(filename):
 def display_confusion_matrix(filename_roc, filename_confusion):
     with open(filename_roc) as json_file:
         roc_dict = json.load(json_file)
-        FPR = roc_dict['FPR']
-        TPR = roc_dict['TPR']
         y_test = pd.Series(roc_dict['y_test'])
 
         cm = pd.read_csv(filename_confusion)
@@ -82,8 +80,8 @@ def display_confusion_matrix(filename_roc, filename_confusion):
         return fig
 
 
-def display_feature_importance(filename_fi):
-    coeffs = pd.read_csv(filename_fi)
+def display_feature_importance():
+    coeffs = pd.read_csv('resources/feature_importance.csv')
     # Let's display that with Plotly.
     mydata = [go.Bar(
         x=coeffs['feature'],
@@ -98,26 +96,6 @@ def display_feature_importance(filename_fi):
 
     )
     fig = go.Figure(data=mydata, layout=mylayout)
-    fig
-
-
-def display_classification_report(filename):
-    cr = pd.read_csv(filename)
-    trace = go.Table(
-        header=dict(values=cr.columns,
-                    line=dict(color='#7D7F80'),
-                    fill=dict(color=Viridis[55]),
-                    align=['left'] * 5),
-        cells=dict(values=['', cr['precision'], cr['recall'], cr['f1-score'], cr['support']],
-                   line=dict(color='#7D7F80'),
-                   fill=dict(color='white'),
-                   align=['left'] * 5))
-
-    layout = go.Layout(
-        title=f'Classification Report',
-    )
-
-    fig = dict(data=[trace], layout=layout)
     return fig
 
 
@@ -136,7 +114,22 @@ def display_eval_metrics(value):
 
     # Feature Importance
     elif value == choices2[3]:
-        display_feature_importance('resources/feature_importance.csv')
+        coeffs = pd.read_csv('resources/feature_importance.csv')
+        # Let's display that with Plotly.
+        mydata = [go.Bar(
+            x=coeffs['feature'],
+            y=coeffs['importance'],
+            marker=dict(color=Viridis[::-6])
+        )]
+
+        mylayout = go.Layout(
+            title='Feature Importance to the Model',
+            xaxis={'title': 'Customer Feature'},
+            yaxis={'title': 'Feature Importance'},
+
+        )
+        fig = go.Figure(data=mydata, layout=mylayout)
+        return fig
 
 
 def display_eval_params(value):

@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import pickle
 from tabs import tab_1_cust, tab_2_cust, tab_3_cust, tab_4_cust
-from utils_cust import display_eval_metrics, display_eval_params, display_confusion_matrix, Viridis
+from utils_cust import display_eval_metrics, display_eval_params, Viridis
 
 
 ## Instantiante Dash

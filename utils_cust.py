@@ -22,95 +22,83 @@ Viridis = [
     "#97d73e", "#9ed93a", "#a8db34", "#b0dd31", "#b8de30", "#c3df2e",
     "#cbe02d", "#d6e22b", "#e1e329", "#eae428", "#f5e626", "#fde725"]
 
-
-def display_roc(filename):
-    with open(filename) as json_file:
-        roc_dict = json.load(json_file)
-        FPR = roc_dict['FPR']
-        TPR = roc_dict['TPR']
-        y_test = pd.Series(roc_dict['y_test'])
-        predictions = roc_dict['predictions']
-
-        roc_score = round(100 * roc_auc_score(y_test, predictions), 1)
-        trace0 = go.Scatter(
-            x=FPR,
-            y=TPR,
-            mode='lines',
-            name=f'AUC: {roc_score}',
-            marker=dict(color=Viridis[10])
-        )
-        trace1 = go.Scatter(
-            x=[0, 1],
-            y=[0, 1],
-            mode='lines',
-            name='Baseline Area: 50.0',
-            marker=dict(color=Viridis[50])
-        )
-        layout = go.Layout(
-            title='Receiver Operating Characteristic (ROC): Area Under Curve',
-            xaxis={'title': 'False Positive Rate (100-Specificity)', 'scaleratio': 1, 'scaleanchor': 'y'},
-            yaxis={'title': 'True Positive Rate (Sensitivity)'}
-        )
-        data = [trace0, trace1]
-        fig = dict(data=data, layout=layout)
-        return fig
-
-
-def display_confusion_matrix(filename_roc, filename_confusion):
-    with open(filename_roc) as json_file:
-        roc_dict = json.load(json_file)
-        y_test = pd.Series(roc_dict['y_test'])
-
-        cm = pd.read_csv(filename_confusion)
+def display_eval_metrics(value):
+    # Classification Report
+    if value == choices2[0]:
+        cr = pd.read_csv('resources/class_report_A.csv')
         trace = go.Table(
-            header=dict(values=cm.columns,
+            header=dict(values=cr.columns,
                         line=dict(color='#7D7F80'),
                         fill=dict(color=Viridis[55]),
                         align=['left'] * 5),
-            cells=dict(values=[cm[f'n={len(y_test)}'], cm['pred: ignored'], cm['pred: responded']],
+            cells=dict(values=[cr['metric'], cr['precision'], cr['recall'], cr['f1-score'], cr['support']],
                        line=dict(color='#7D7F80'),
                        fill=dict(color='white'),
                        align=['left'] * 5))
 
         layout = go.Layout(
-            title=f'Decision Tree Classifier',
+            title=f'Classification Report',
         )
 
-        fig = dict(data=[trace], layout=layout)
+        fig = go.Figure(data=[trace], layout=layout)
         return fig
-
-
-def display_feature_importance():
-    coeffs = pd.read_csv('resources/feature_importance.csv')
-    # Let's display that with Plotly.
-    mydata = [go.Bar(
-        x=coeffs['feature'],
-        y=coeffs['importance'],
-        marker=dict(color=Viridis[::-6])
-    )]
-
-    mylayout = go.Layout(
-        title='Feature Importance to the Model',
-        xaxis={'title': 'Customer Feature'},
-        yaxis={'title': 'Feature Importance'},
-
-    )
-    fig = go.Figure(data=mydata, layout=mylayout)
-    return fig
-
-
-def display_eval_metrics(value):
-    # Classification Report
-    if value == choices2[0]:
-        display_classification_report('resources/class_report_A.csv')
 
     # Receiver Operating Characteristic (ROC): Area Under Curve
     elif value == choices2[1]:
-        display_roc('resources/roc_dict_A.json')
+        with open('resources/roc_dict_A.json') as json_file:
+            roc_dict = json.load(json_file)
+            FPR = roc_dict['FPR']
+            TPR = roc_dict['TPR']
+            y_test = pd.Series(roc_dict['y_test'])
+            predictions = roc_dict['predictions']
+
+            roc_score = round(100 * roc_auc_score(y_test, predictions), 1)
+            trace0 = go.Scatter(
+                x=FPR,
+                y=TPR,
+                mode='lines',
+                name=f'AUC: {roc_score}',
+                marker=dict(color=Viridis[10])
+            )
+            trace1 = go.Scatter(
+                x=[0, 1],
+                y=[0, 1],
+                mode='lines',
+                name='Baseline Area: 50.0',
+                marker=dict(color=Viridis[50])
+            )
+            layout = go.Layout(
+                title='Receiver Operating Characteristic (ROC): Area Under Curve',
+                xaxis={'title': 'False Positive Rate (100-Specificity)', 'scaleratio': 1, 'scaleanchor': 'y'},
+                yaxis={'title': 'True Positive Rate (Sensitivity)'}
+            )
+            data = [trace0, trace1]
+            fig = go.Figure(data=data, layout=layout)
+            return fig
 
     # Confusion Matrix
     elif value == choices2[2]:
-        display_confusion_matrix('resources/roc_dict_A.json', 'resources/confusion_matrix_A.csv')
+        with open('resources/roc_dict_A.json') as json_file:
+            roc_dict = json.load(json_file)
+            y_test = pd.Series(roc_dict['y_test'])
+
+            cm = pd.read_csv('resources/confusion_matrix_A.csv')
+            trace = go.Table(
+                header=dict(values=cm.columns,
+                            line=dict(color='#7D7F80'),
+                            fill=dict(color=Viridis[55]),
+                            align=['left'] * 5),
+                cells=dict(values=[cm[f'n={len(y_test)}'], cm['pred: ignored'], cm['pred: responded']],
+                           line=dict(color='#7D7F80'),
+                           fill=dict(color='white'),
+                           align=['left'] * 5))
+
+            layout = go.Layout(
+                title=f'Decision Tree Classifier',
+            )
+
+            fig = go.Figure(data=[trace], layout=layout)
+            return fig
 
     # Feature Importance
     elif value == choices2[3]:

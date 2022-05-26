@@ -1,6 +1,7 @@
 # Titanic Survival Classifier
 
 ## View deployed app on Heroku: https://vibha-customer-dtree-classfcn.herokuapp.com/
+## Notebook is customer-eval-modeling.ipynb
 
 This repo is a template for capstone presentations of machine learning. Though simple, it has several important features that should be imitated in any capstone:
 

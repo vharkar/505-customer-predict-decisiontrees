@@ -6,6 +6,7 @@ from sklearn.metrics import roc_auc_score
 from tabs.tab_2_cust import choices2
 from tabs.tab_3_cust import choices3
 import json
+import base64
 
 Viridis = [
     "#440154", "#440558", "#450a5c", "#450e60", "#451465", "#461969",
@@ -141,16 +142,21 @@ def display_eval_metrics(value):
 def display_eval_params(value):
     # Maximum Tree Depth
     if value == choices3[0]:
-        return './resources/max_depth.png'
+        encoded_image = base64.b64encode(open('resources/max_depth.png', 'rb').read())
+        return 'data:image/png;base64,{}'.format(encoded_image.decode())
 
     # Maximum Sample Leafs
     elif value == choices3[1]:
-        return 'resources/min_samples.png'
+        encoded_image = base64.b64encode(open('resources/min_samples.png', 'rb').read())
+        return 'data:image/png;base64,{}'.format(encoded_image.decode())
 
     # Maximum Sample Splits
     elif value == choices3[2]:
-        return 'resources/min_splits.png'
+        encoded_image = base64.b64encode(open('resources/min_splits.png', 'rb').read())
+        return 'data:image/png;base64,{}'.format(encoded_image.decode())
 
     # Maximum Features
     elif value == choices3[3]:
-        return 'resources/max_features.png'
+        encoded_image = base64.b64encode(open('resources/max_features.png', 'rb').read())
+        return 'data:image/png;base64,{}'.format(encoded_image.decode())
+
